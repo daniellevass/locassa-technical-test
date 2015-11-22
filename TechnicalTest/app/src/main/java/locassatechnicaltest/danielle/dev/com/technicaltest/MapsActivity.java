@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cyd.awesome.material.AwesomeButton;
 import retrofit.Callback;
@@ -45,11 +43,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView lblTitle;
     private AwesomeButton btnSearch;
     private ViewGroup mapBackground;
-    private boolean setToFirstFoundLocation;
 
 
-    private ArrayList<MapMarkerItem> mapMarkerItemList;
-    private static final String KEY_MAP_ITEMS = "MAP_ITEMS";
+    private boolean setToFirstFoundLocation; //boolean to only set to current location once.
+
+
+    private ArrayList<MapMarkerItem> mapMarkerItemList; //list of markers for the map
+    private static final String KEY_MAP_ITEMS = "MAP_ITEMS"; //key to save map markers list to savedInstanceState
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setToFirstFoundLocation = false;
 
 
-
         //search button pressed
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
+        //check if we have a saved instance state from screen rotation
         if (savedInstanceState != null){
-            //rotated screen or changed something on screen so we already had map items
+            //we have previous map items!
             mapMarkerItemList = savedInstanceState.getParcelableArrayList(KEY_MAP_ITEMS);
         } else {
             //no map items, make a new array list to save to
@@ -99,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         outState.putParcelableArrayList(KEY_MAP_ITEMS, mapMarkerItemList);
     }
 
+    //function to get weather from Yahoo Weather database based on provided LatLng coordinates
     private void getWeatherData(LatLng coordinates){
 
         lblTitle.setText("Searching...");
@@ -154,6 +155,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 );
 
                             } else {
+
+                                //something went wrong if we didn't get anything returned
+                                //can happen if we search for something in the middle of the ocean!
                                 lblTitle.setText("Location not found in Yahoo's Weather Database");
                                 mapBackground.setBackgroundColor(
                                         ContextCompat.getColor(MapsActivity.this,
@@ -188,7 +192,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
+        //check to make sure user has actually allowed us to use their location
+        //todo: handle whether this changes! e.g. from no permission to permission.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
@@ -197,33 +202,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+        //listen for when we get the users location
         //http://stackoverflow.com/a/26267862/2623314
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
 
+                //we only want to do this once!
                 if (!setToFirstFoundLocation) {
+
+                    //update the view camera to the users location
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(11);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
 
+                    //we've got data once, probably don't want to get it again.
                     setToFirstFoundLocation = true;
 
+                    //get weather for their location
                     getWeatherData(mMap.getCameraPosition().target);
                 }
 
 
             }
         });
-
-        //watch for when the user moves the map.
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-
-            }
-        });//end on camera change listener
 
 
         //check if we need to display items from a screen orientation
@@ -235,14 +238,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .icon(BitmapDescriptorFactory.fromBitmap(drawCircle(m.getTemp(), m.getColor())))
                 );
             }
-        }
+        }//end if we had items from screen rotation
 
 
     }//end on map ready
 
 
+    //function to draw a map pin as a circle indicating the temperature
     private Bitmap drawCircle(String number, int colour){
 
+        //create a new canvas
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(40, 40, conf);
         Canvas canvas = new Canvas(bmp);
@@ -256,6 +261,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //draw text
         color.setColor(Color.BLACK);
         color.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        color.setTextSize(18);
+        canvas.drawText(number, 10, 27, color);
 
 
         return bmp;
