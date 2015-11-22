@@ -2,6 +2,8 @@ package locassatechnicaltest.danielle.dev.com.technicaltest;
 
 /**
  * Created by daniellevass on 21/11/2015.
+ * class that maps to the data returned to us from a YQL weather request
+ * e.g. https://developer.yahoo.com/yql/console/#h=select+*+from+weather.forecast+where+woeid+in+(select+woeid+from+geo.placefinder+where+text%3D%2251.382%2C+-2.358%22+and+gflags%3D%22R%22)+and+u%3D%22c%22
  */
 public class WeatherResponse {
 
@@ -52,6 +54,7 @@ public class WeatherResponse {
             return condition;
         }
 
+        //function to create a short description
         public String getShortDescription(){
 
             StringBuilder sb = new StringBuilder();
@@ -60,7 +63,7 @@ public class WeatherResponse {
 
             sb.append("\n");
 
-            sb.append(condition.getText() + " - " + condition.getTemp() + "\u00B0C");
+            sb.append(condition.getText() + "\n" + condition.getTemp() + "\u00B0C");
 
 
             return sb.toString();

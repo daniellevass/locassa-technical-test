@@ -9,14 +9,17 @@ import java.io.Serializable;
 
 /**
  * Created by daniellevass on 21/11/2015.
+ *
+ * small Class for the data that gets held on a map marker
  */
 public class MapMarkerItem implements Parcelable{
 
 
-    private LatLng coordinates;
-    private String temp;
-    private int color;
-    private String shortDescription;
+    private LatLng coordinates; //coordinates for the center of the map pin
+    private String temp; //text to display the current temperature
+    private int color; //R.color asset for the background of the map pin
+    private String shortDescription; //short description that gets displayed to the user when they tap on a map pin
+
 
     public MapMarkerItem(LatLng coordinates, String temp, int color, String shortDescription) {
         this.coordinates = coordinates;
@@ -56,10 +59,6 @@ public class MapMarkerItem implements Parcelable{
 
     }
 
-    @Override
-    public int describeContents() {
-        return 0; //default
-    }
 
     private MapMarkerItem(Parcel in) {
 
@@ -73,5 +72,20 @@ public class MapMarkerItem implements Parcelable{
         color = in.readInt();
         shortDescription = in.readString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0; //default
+    }
+
+    public static final Parcelable.Creator<MapMarkerItem> CREATOR = new Parcelable.Creator<MapMarkerItem>() {
+        public MapMarkerItem createFromParcel(Parcel in) {
+            return new MapMarkerItem(in);
+        }
+
+        public MapMarkerItem[] newArray(int size) {
+            return new MapMarkerItem[size];
+        }
+    };
 
 }

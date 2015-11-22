@@ -2,7 +2,6 @@ package locassatechnicaltest.danielle.dev.com.technicaltest;
 
 import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -11,6 +10,8 @@ import retrofit.http.Query;
 public interface WeatherService {
 
 
+    //function to get weather for a provided query
+    //we create the query when we use it so we can specify what location we want
     //e.g. for san francisco coordinates
     // https://query.yahooapis.com/v1/public/yql?q=
     // select * from weather.forecast where woeid in

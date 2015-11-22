@@ -255,13 +255,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //draw text
         color.setColor(Color.BLACK);
-
-
-
         color.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-
-            color.setTextSize(18);
-            canvas.drawText(number, 10, 27, color);
 
 
         return bmp;
