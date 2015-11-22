@@ -225,8 +225,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });//end on camera change listener
 
-    }//end on map ready
 
+        //check if we need to display items from a screen orientation
+        if (mapMarkerItemList.size() > 0){
+            for (MapMarkerItem m : mapMarkerItemList){
+                mMap.addMarker(new MarkerOptions()
+                                .position(m.getCoordinates())
+                                .title(m.getShortDescription())
+                                .icon(BitmapDescriptorFactory.fromBitmap(drawCircle(m.getTemp(), m.getColor())))
+                );
+            }
+        }
+
+
+    }//end on map ready
 
 
     private Bitmap drawCircle(String number, int colour){
