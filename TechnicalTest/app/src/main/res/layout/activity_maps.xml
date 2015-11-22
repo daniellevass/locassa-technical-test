@@ -1,0 +1,57 @@
+<RelativeLayout
+    android:id="@+id/mapBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_blue_grey_700"
+    xmlns:awesome="http://schemas.android.com/apk/res-auto"
+    >
+
+    <TextView
+        android:id="@+id/lblLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/md_grey_50"
+        android:text="Searching..."
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:background="@color/md_blue_grey_900"
+        android:elevation="5dp"
+        />
+
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_margin="30dp"
+        android:layout_below="@id/lblLocation"
+        android:layout_height="match_parent"
+        tools:context="locassatechnicaltest.danielle.dev.com.technicaltest.MapsActivity" />
+
+
+    <cyd.awesome.material.AwesomeButton
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+
+        awesome:awesome_type="bootstrap_danger"
+        awesome:awesome_rounded_corners="true"
+        awesome:awesome_icon_right="FA_SEARCH"
+        awesome:awesome_font="font_awesome"
+
+        android:layout_alignBottom="@id/mapFragment"
+        android:layout_alignRight="@id/mapFragment"
+
+        />
+
+
+</RelativeLayout>
+
+
