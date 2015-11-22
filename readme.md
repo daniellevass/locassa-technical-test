@@ -21,5 +21,6 @@ Min SDK is 14 which is Ice Cream Sandwich
 
 -[ ] rescans for your current location when you rotate device (just draws another
   map pin on top)
+  
 -[ ] The Yahoo Weather API returns weirdly dated data for certain locations e.g.
   5am data when it's actually 10pm.
